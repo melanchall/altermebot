@@ -4,13 +4,13 @@
 
 ## Commands
 
-#### `/alias _\<alias\>_`
+#### `/alias <alias\>`
 Add the specified alias so you can be called with it in the current chat
 
 #### `/list`
 List all your aliases for the current chat
 
-#### `/remove _\<alias\>_`
+#### `/remove <alias>`
 Remove the specified alias so you cannot be called with it in the current chat
 
 #### `/clear`
