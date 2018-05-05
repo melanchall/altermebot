@@ -4,7 +4,7 @@
 
 ## Commands
 
-#### `/alias <alias\>`
+#### `/alias <alias>`
 Add the specified alias so you can be called with it in the current chat
 
 #### `/list`
