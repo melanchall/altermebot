@@ -22,7 +22,7 @@ class AliasCommandHandler(CommandHandler):
 
         # Check if max aliases count reached
 
-        if self._aliases_storage.get_aliases_count(from_username, chat_id) == ALIASES_MAX_COUNT:
+        if self._aliases_storage.get_aliases_count(from_username, chat_id) >= ALIASES_MAX_COUNT:
             bot.send_message(chat_id=chat_id,
                              text="@%s, you've reached max aliases count for this chat (%d). Please remove some "
                                   "aliases and try again" % (from_username, ALIASES_MAX_COUNT))
