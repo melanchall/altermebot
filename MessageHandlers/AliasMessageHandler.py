@@ -22,7 +22,7 @@ class AliasMessageHandler(MessageHandler):
             return
 
         from_username = message.from_user.username.lower()
-        foreign_usernames = list(filter(lambda u: u.lower() != from_username, usernames))
+        foreign_usernames = set(filter(lambda u: u.lower() != from_username, usernames))
 
         if not any(foreign_usernames):
             logging.info("message: exited due to aliases are owned by message sender")

@@ -3,7 +3,7 @@ import logging
 from telegram.ext import CommandHandler
 from telegram import ParseMode, MessageEntity
 
-from BotUtils import escape_markdown, ALIAS_MAX_LENGTH
+from BotUtils import escape_markdown, ALIAS_MAX_LENGTH, ALIAS_MIN_LENGTH, ALIASES_MAX_COUNT
 
 
 class AliasCommandHandler(CommandHandler):
@@ -19,6 +19,15 @@ class AliasCommandHandler(CommandHandler):
         message = update.message
         chat_id = message.chat_id
         from_username = message.from_user.username
+
+        # Check if max aliases count reached
+
+        if self._aliases_storage.get_aliases_count(from_username, chat_id) == ALIASES_MAX_COUNT:
+            bot.send_message(chat_id=chat_id,
+                             text="@%s, you've reached max aliases count for this chat (%d). Please remove some "
+                                  "aliases and try again" % (from_username, ALIASES_MAX_COUNT))
+            logging.info('/alias: exited due to max aliases count reached')
+            return
 
         # Check that alias is  specified
 
@@ -49,11 +58,17 @@ class AliasCommandHandler(CommandHandler):
 
         # Check that alias has valid length
 
+        if len(alias) < ALIAS_MIN_LENGTH:
+            bot.send_message(chat_id=chat_id,
+                             text="@%s, alias is too short. Min length is %d"
+                                  % (from_username, ALIAS_MIN_LENGTH))
+            logging.info('/alias: exited due to alias is too short')
+            return
+
         if len(alias) > ALIAS_MAX_LENGTH:
             bot.send_message(chat_id=chat_id,
                              text="@%s, alias is too long. Max length is %d"
-                                  % (escape_markdown(from_username), ALIAS_MAX_LENGTH),
-                             parse_mode=ParseMode.MARKDOWN)
+                                  % (from_username, ALIAS_MAX_LENGTH))
             logging.info('/alias: exited due to alias is too long')
             return
 

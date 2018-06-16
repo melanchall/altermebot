@@ -16,6 +16,14 @@ class AliasesStorage(object):
 
         self.__create_tables()
 
+    def get_aliases_count(self, username, chat_id):
+        (count,) = self._cursor.execute('''SELECT COUNT(*)
+                                           FROM users, aliases
+                                           WHERE EQNOCASE(username, ?) AND
+                                                 user_id = users.id AND
+                                                 chat_id = ?''', (username, chat_id)).fetchone()
+        return count
+
     def check_alias(self, username, chat_id, alias):
         user_id_row = self._cursor.execute('''SELECT user_id
                                               FROM aliases
