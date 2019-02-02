@@ -14,7 +14,7 @@ class AliasCommandHandler(CommandHandler):
         self._aliases_storage = aliases_storage
 
     def __handle(self, bot, update, args):
-        logging.info('/alias: entered')
+        logging.info('/alias: entered by user: %d' % update.message.from_user.id)
 
         message = update.message
         chat_id = message.chat_id
