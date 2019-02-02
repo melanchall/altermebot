@@ -104,3 +104,4 @@ ENV/
 *.env
 *.sh
 aliases.db
+aliases2.db
