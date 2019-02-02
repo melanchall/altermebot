@@ -18,21 +18,31 @@ class RemoveCommandHandler(CommandHandler):
 
         message = update.message
         chat_id = message.chat_id
-        from_username = message.from_user.username
+        user_id = message.from_user.id
+
+        user = message.from_user
+        mention = user.username
+        parse_mode = None
+        if not mention:
+            mention = '[%s](tg://user?id=%d)' % (user.full_name, user_id)
+            parse_mode = ParseMode.MARKDOWN
+        else:
+            mention = "@%s" % mention
 
         if not any(args):
             bot.send_message(chat_id=chat_id,
-                             text="@%s, you should specify alias passing it as a parameter to the /remove command"
-                                  % from_username)
+                             text="%s, you should specify alias passing it as a parameter to the /remove command"
+                                  % mention,
+                             parse_mode=parse_mode)
             logging.info('/remove: exited due to no arguments provided')
             return
 
         alias = ' '.join(args)
-        self._aliases_storage.remove_alias(from_username, chat_id, alias)
+        self._aliases_storage.remove_alias(user_id, chat_id, alias)
 
         bot.send_message(chat_id=chat_id,
-                         text="@%s, alias *%s* was successfully removed"
-                              % (escape_markdown(from_username), escape_markdown(alias)),
+                         text="%s, alias *%s* was successfully removed"
+                              % (escape_markdown(mention) if parse_mode is None else mention, escape_markdown(alias)),
                          parse_mode=ParseMode.MARKDOWN)
 
         logging.info('/remove: exited')

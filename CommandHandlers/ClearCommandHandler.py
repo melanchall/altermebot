@@ -1,6 +1,7 @@
 import logging
 
 from telegram.ext import CommandHandler
+from telegram import ParseMode
 
 
 class ClearCommandHandler(CommandHandler):
@@ -15,11 +16,21 @@ class ClearCommandHandler(CommandHandler):
 
         message = update.message
         chat_id = message.chat_id
-        from_username = message.from_user.username
+        user_id = message.from_user.id
 
-        self._aliases_storage.remove_all_aliases(from_username, chat_id)
+        user = message.from_user
+        mention = user.username
+        parse_mode = None
+        if not mention:
+            mention = '[%s](tg://user?id=%d)' % (user.full_name, user_id)
+            parse_mode = ParseMode.MARKDOWN
+        else:
+            mention = "@%s" % mention
+
+        self._aliases_storage.remove_all_aliases(user_id, chat_id)
 
         bot.send_message(chat_id=chat_id,
-                         text="@%s, all your aliases for this chat were successfully removed" % from_username)
+                         text="%s, all your aliases for this chat were successfully removed" % mention,
+                         parse_mode=parse_mode)
 
         logging.info('/clear: exited')
