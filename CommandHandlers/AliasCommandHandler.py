@@ -22,7 +22,8 @@ class AliasCommandHandler(CommandHandler):
 
         if not from_username:
             bot.send_message(chat_id=chat_id,
-                             text="[Mr. Unknown](tg://user?id=%d), are you tagged?" % update.message.from_user.id)
+                             text="[Mr. Unknown](tg://user?id=%d), are you tagged?" % update.message.from_user.id,
+                             parse_mode=ParseMode.MARKDOWN)
             logging.info('/alias: exited due to no username')
             return
 
