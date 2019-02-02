@@ -1,6 +1,7 @@
 import logging
 
 from telegram.ext import MessageHandler, Filters
+from telegram import ParseMode
 
 
 class AliasMessageHandler(MessageHandler):
@@ -16,21 +17,34 @@ class AliasMessageHandler(MessageHandler):
         message = update.message
         chat_id = message.chat_id
 
-        usernames = self._aliases_storage.contains_alias(message.text, chat_id)
-        if not any(usernames):
+        user_ids = self._aliases_storage.contains_alias(message.text, chat_id)
+        if not any(user_ids):
             logging.info("message: exited due to message doesn't contain aliases")
             return
 
-        from_username = message.from_user.username.lower()
-        foreign_usernames = set(filter(lambda u: u.lower() != from_username, usernames))
+        from_user_id = message.from_user.id
+        foreign_user_ids = set(filter(lambda u: u.lower() != from_user_id, user_ids))
 
-        if not any(foreign_usernames):
+        if not any(foreign_user_ids):
             logging.info("message: exited due to aliases are owned by message sender")
             return
 
-        text = ' '.join(map(lambda u: "@%s" % u, foreign_usernames))
+        mentions = []
+        parse_mode = None
+        for user_id in foreign_user_ids:
+            user = message.chat.get_member(user_id).user
+            mention = user.username
+            if not mention:
+                mention = '[Unknown human](tg://user?id=%d)' % user_id
+                parse_mode = ParseMode.MARKDOWN
+            else:
+                mention = "@%s" % mention
+            mentions.append(mention)
+
+        text = ' '.join(map(lambda u: "%s" % u, mentions))
         bot.send_message(chat_id=chat_id,
                          text=text,
-                         reply_to_message_id=message.message_id)
+                         reply_to_message_id=message.message_id,
+                         parse_mode=parse_mode)
 
         logging.info('message: exited')
