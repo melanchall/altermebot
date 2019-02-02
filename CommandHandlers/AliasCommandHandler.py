@@ -20,6 +20,12 @@ class AliasCommandHandler(CommandHandler):
         chat_id = message.chat_id
         from_username = message.from_user.username
 
+        if not from_username:
+            bot.send_message(chat_id=chat_id,
+                             text="[Mr. Unknown](tg://user?id=%d), are you tagged?" % update.message.from_user.id)
+            logging.info('/alias: exited due to no username')
+            return
+
         # Check if max aliases count reached
 
         if self._aliases_storage.get_aliases_count(from_username, chat_id) >= ALIASES_MAX_COUNT:
