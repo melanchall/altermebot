@@ -35,7 +35,7 @@ class AliasMessageHandler(MessageHandler):
             user = message.chat.get_member(user_id).user
             mention = user.username
             if not mention:
-                mention = '[Unknown human](tg://user?id=%d)' % user_id
+                mention = '[%s](tg://user?id=%d)' % (user.full_name, user_id)
                 parse_mode = ParseMode.MARKDOWN
             else:
                 mention = "@%s" % mention

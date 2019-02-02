@@ -24,7 +24,7 @@ class AliasCommandHandler(CommandHandler):
         mention = user.username
         parse_mode = None
         if not mention:
-            mention = '[Unknown human](tg://user?id=%d)' % user_id
+            mention = '[%s](tg://user?id=%d)' % (user.full_name, user_id)
             parse_mode = ParseMode.MARKDOWN
         else:
             mention = "@%s" % mention
