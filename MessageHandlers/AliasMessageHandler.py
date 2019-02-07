@@ -17,6 +17,8 @@ class AliasMessageHandler(MessageHandler):
         message = update.message
         chat_id = message.chat_id
 
+        logging.info('chat title: %s' % message.chat.title)
+
         user_ids = self._aliases_storage.contains_alias(message.text, chat_id)
         if not any(user_ids):
             logging.info("message: exited due to message doesn't contain aliases")
