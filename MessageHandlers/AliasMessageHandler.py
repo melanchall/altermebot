@@ -25,7 +25,7 @@ class AliasMessageHandler(MessageHandler):
         if username:
             old_aliases = self._aliases_storage.get_aliases(username, chat_id)
             for old_alias in old_aliases:
-                self.aliases_storage2.add_alias(from_user_id, chat_id, old_alias)
+                self._aliases_storage2.add_alias(from_user_id, chat_id, old_alias)
 
         user_ids = self._aliases_storage2.contains_alias(message.text, chat_id)
         if not any(user_ids):
