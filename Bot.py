@@ -11,7 +11,6 @@ from CommandHandlers.ClearCommandHandler import ClearCommandHandler
 from CommandHandlers.AdminCommandHandler import AdminCommandHandler
 
 from MessageHandlers.AliasMessageHandler import AliasMessageHandler
-from MessageHandlers.MigrateDbRecordsMessageHandler import MigrateDbRecordsMessageHandler
 
 from AliasesStorage import AliasesStorage
 from AliasesStorage2 import AliasesStorage2
@@ -62,8 +61,7 @@ class Bot(object):
 
     def __setup_message_handlers(self):
         handlers = [
-            AliasMessageHandler(self._aliases_storage2),
-            MigrateDbRecordsMessageHandler(self._aliases_storage, self._aliases_storage2)
+            AliasMessageHandler(self._aliases_storage, self._aliases_storage2)
         ]
 
         for handler in handlers:

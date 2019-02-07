@@ -7,24 +7,31 @@ from telegram import ParseMode
 class AliasMessageHandler(MessageHandler):
     """description of class"""
 
-    def __init__(self, aliases_storage):
+    def __init__(self, aliases_storage, aliases_storage2):
         super().__init__(Filters.text, self.__handle)
         self._aliases_storage = aliases_storage
+        self._aliases_storage2 = aliases_storage2
 
     def __handle(self, bot, update):
         logging.info('message: entered')
 
         message = update.message
         chat_id = message.chat_id
+        username = message.from_user.username
+        from_user_id = message.from_user.id
 
         logging.info('chat title: %s' % message.chat.title)
 
-        user_ids = self._aliases_storage.contains_alias(message.text, chat_id)
+        if username:
+            old_aliases = self._aliases_storage.get_aliases(username, chat_id)
+            for old_alias in old_aliases:
+                self.aliases_storage2.add_alias(from_user_id, chat_id, old_alias)
+
+        user_ids = self._aliases_storage2.contains_alias(message.text, chat_id)
         if not any(user_ids):
             logging.info("message: exited due to message doesn't contain aliases")
             return
 
-        from_user_id = message.from_user.id
         foreign_user_ids = set(filter(lambda u: u != from_user_id, user_ids))
 
         if not any(foreign_user_ids):
