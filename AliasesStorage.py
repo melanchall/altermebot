@@ -19,6 +19,18 @@ class AliasesStorage(object):
                                              user_id = users.id AND
                                              chat_id = ?''', (username, chat_id)).fetchall()
         return list(map(lambda row: row[0], rows))
+    
+    def remove_all_aliases(self, username, chat_id):
+        self._cursor.execute('''DELETE
+                                FROM aliases
+                                WHERE user_id IN (SELECT id
+                                                  FROM users
+                                                  WHERE EQNOCASE(username, ?)) AND
+                                      chat_id = ?''', (username, chat_id))
+        self._cursor.execute('''DELETE
+                                FROM users
+                                WHERE EQNOCASE(username, ?)''', (username))
+        self._connection.commit()
 
     @staticmethod
     def __eqnocase(x, y):
