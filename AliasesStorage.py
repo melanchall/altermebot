@@ -27,9 +27,6 @@ class AliasesStorage(object):
                                                   FROM users
                                                   WHERE EQNOCASE(username, ?)) AND
                                       chat_id = ?''', (username, chat_id))
-        self._cursor.execute('''DELETE
-                                FROM users
-                                WHERE EQNOCASE(username, ?)''', (username))
         self._connection.commit()
 
     @staticmethod
