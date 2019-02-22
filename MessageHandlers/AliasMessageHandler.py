@@ -42,14 +42,15 @@ class AliasMessageHandler(MessageHandler):
         mentions = []
         parse_mode = None
         for user_id in foreign_user_ids:
-            user = message.chat.get_member(user_id).user
-            mention = user.username
-            if not mention:
-                mention = '[%s](tg://user?id=%d)' % (user.full_name, user_id)
-                parse_mode = ParseMode.MARKDOWN
-            else:
-                mention = "@%s" % mention
-            mentions.append(mention)
+            if self._aliases_storage2.is_aliasing_enabled(user_id, chat_id):
+                user = message.chat.get_member(user_id).user
+                mention = user.username
+                if not mention:
+                    mention = '[%s](tg://user?id=%d)' % (user.full_name, user_id)
+                    parse_mode = ParseMode.MARKDOWN
+                else:
+                    mention = "@%s" % mention
+                mentions.append(mention)
 
         text = ' '.join(map(lambda u: "%s" % u, mentions))
         bot.send_message(chat_id=chat_id,

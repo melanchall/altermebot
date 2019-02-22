@@ -9,6 +9,8 @@ from CommandHandlers.HelpCommandHandler import HelpCommandHandler
 from CommandHandlers.RemoveCommandHandler import RemoveCommandHandler
 from CommandHandlers.ClearCommandHandler import ClearCommandHandler
 from CommandHandlers.AdminCommandHandler import AdminCommandHandler
+from CommandHandlers.OnCommandHandler import OnCommandHandler
+from CommandHandlers.OffCommandHandler import OffCommandHandler
 
 from MessageHandlers.AliasMessageHandler import AliasMessageHandler
 
@@ -53,7 +55,9 @@ class Bot(object):
             HelpCommandHandler(),
             RemoveCommandHandler(self._aliases_storage2),
             ClearCommandHandler(self._aliases_storage2),
-            AdminCommandHandler(self._aliases_storage2)
+            AdminCommandHandler(self._aliases_storage2),
+            OnCommandHandler(self._aliases_storage2),
+            OffCommandHandler(self._aliases_storage2)
         ]
 
         for handler in handlers:

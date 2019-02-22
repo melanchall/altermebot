@@ -19,6 +19,8 @@ class HelpCommandHandler(CommandHandler):
             '/list - List all your aliases for the current chat',
             '/remove _<alias>_ - Remove the specified alias so you cannot be called with it in the current chat',
             '/clear - Remove all your aliases in the current chat',
+            '/off - Disable mentioning you by your aliases in the current chat',
+            '/on - Enable mentioning you by your aliases in the current chat',
             '/help - Show this help message'])
         bot.send_message(chat_id=update.message.chat_id,
                          text=text,

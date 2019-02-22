@@ -2,6 +2,8 @@ import sqlite3
 import re
 import logging
 
+from BotUtils import ALIASING_ENABLED, ALIASING_DISABLED
+
 
 class AliasesStorage2(object):
     """description of class"""
@@ -67,6 +69,26 @@ class AliasesStorage2(object):
                                              alias REGEXP ? ''', (chat_id, text)).fetchall()
         return list(map(lambda row: row[0], rows))
 
+    def enable_aliasing(self, user_id, chat_id):
+        self._cursor.execute('''INSERT OR REPLACE INTO state(user_id, chat_id, state)
+                                VALUES (?, ?, ?)''', (user_id, chat_id, ALIASING_ENABLED))
+        self._connection.commit()
+
+    def disable_aliasing(self, user_id, chat_id):
+        self._cursor.execute('''INSERT OR REPLACE INTO state(user_id, chat_id, state)
+                                VALUES (?, ?, ?)''', (user_id, chat_id, ALIASING_DISABLED))
+        self._connection.commit()
+
+    def is_aliasing_enabled(self, user_id, chat_id):
+        state_row = self._cursor.execute('''SELECT state
+                                            FROM state
+                                            WHERE chat_id = ? AND
+                                                  user_id = ?''', (chat_id, user_id)).fetchone()
+        if state_row is None:
+            return True
+
+        return state_row[0] == ALIASING_ENABLED
+
     @staticmethod
     def __regexp(text, alias):
         return 1 if alias and re.search(r'(?i)\b%s\b' % re.escape(alias), text) else 0
@@ -77,6 +99,7 @@ class AliasesStorage2(object):
 
     def __create_tables(self):
         self.__create_aliases_table()
+        self.__create_state_table()
 
     def __create_aliases_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS aliases (
@@ -85,3 +108,11 @@ class AliasesStorage2(object):
                                 chat_id INTEGER NOT NULL,
                                 alias   TEXT NOT NULL,
                                 UNIQUE (user_id, chat_id, alias))''')
+
+    def __create_state_table(self):
+        self._cursor.execute('''CREATE TABLE IF NOT EXISTS state (
+                                id      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+                                user_id INTEGER NOT NULL,
+                                chat_id INTEGER NOT NULL,
+                                state   INTEGER DEFAULT ? NOT NULL,
+                                UNIQUE (user_id, chat_id))''', ALIASING_ENABLED)
