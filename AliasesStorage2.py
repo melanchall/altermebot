@@ -70,18 +70,18 @@ class AliasesStorage2(object):
         return list(map(lambda row: row[0], rows))
 
     def enable_aliasing(self, user_id, chat_id):
-        self._cursor.execute('''INSERT OR REPLACE INTO state(user_id, chat_id, state)
+        self._cursor.execute('''INSERT OR REPLACE INTO states(user_id, chat_id, state)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, ALIASING_ENABLED))
         self._connection.commit()
 
     def disable_aliasing(self, user_id, chat_id):
-        self._cursor.execute('''INSERT OR REPLACE INTO state(user_id, chat_id, state)
+        self._cursor.execute('''INSERT OR REPLACE INTO states(user_id, chat_id, state)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, ALIASING_DISABLED))
         self._connection.commit()
 
     def is_aliasing_enabled(self, user_id, chat_id):
         state_row = self._cursor.execute('''SELECT state
-                                            FROM state
+                                            FROM states
                                             WHERE chat_id = ? AND
                                                   user_id = ?''', (chat_id, user_id)).fetchone()
         if state_row is None:
@@ -99,7 +99,7 @@ class AliasesStorage2(object):
 
     def __create_tables(self):
         self.__create_aliases_table()
-        self.__create_state_table()
+        self.__create_states_table()
 
     def __create_aliases_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS aliases (
@@ -109,10 +109,10 @@ class AliasesStorage2(object):
                                 alias   TEXT NOT NULL,
                                 UNIQUE (user_id, chat_id, alias))''')
 
-    def __create_state_table(self):
-        self._cursor.execute('''CREATE TABLE IF NOT EXISTS state (
+    def __create_states_table(self):
+        self._cursor.execute('''CREATE TABLE IF NOT EXISTS states (
                                 id      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
                                 user_id INTEGER NOT NULL,
                                 chat_id INTEGER NOT NULL,
-                                state   INTEGER DEFAULT ? NOT NULL,
-                                UNIQUE (user_id, chat_id))''', ALIASING_ENABLED)
+                                state   INTEGER NOT NULL,
+                                UNIQUE (user_id, chat_id))''')
