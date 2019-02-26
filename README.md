@@ -16,6 +16,12 @@ Remove the specified alias so you cannot be called with it in the current chat
 #### `/clear`
 Remove all your aliases in the current chat
 
+#### `/off`
+Disable mentioning you by your aliases in the current chat
+
+#### `/on`
+Enable mentioning you by your aliases in the current chat
+
 #### `/help`
 Show the help message
 
