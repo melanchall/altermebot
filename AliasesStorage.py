@@ -1,5 +1,4 @@
 import sqlite3
-import logging
 
 
 class AliasesStorage(object):
@@ -7,7 +6,6 @@ class AliasesStorage(object):
 
     def __init__(self):
         self._connection = sqlite3.connect("aliases.db", check_same_thread=False)
-        self._connection.set_trace_callback(logging.info)
         self._connection.create_function('eqnocase', 2, self.__eqnocase)
 
         self._cursor = self._connection.cursor()

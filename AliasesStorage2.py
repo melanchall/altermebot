@@ -10,7 +10,6 @@ class AliasesStorage2(object):
 
     def __init__(self):
         self._connection = sqlite3.connect("aliases2.db", check_same_thread=False)
-        self._connection.set_trace_callback(logging.info)
         self._connection.create_function('regexp', 2, self.__regexp)
         self._connection.create_function('eqnocase', 2, self.__eqnocase)
 
@@ -19,6 +18,7 @@ class AliasesStorage2(object):
         self.__create_tables()
 
     def get_aliases_count(self, user_id, chat_id):
+        logging.info('[AS] get aliases count for user %d in chat %d' % (user_id, chat_id))
         (count,) = self._cursor.execute('''SELECT COUNT(*)
                                            FROM aliases
                                            WHERE user_id = ? AND
@@ -26,6 +26,7 @@ class AliasesStorage2(object):
         return count
 
     def check_alias_is_not_in_use(self, user_id, chat_id, alias):
+        logging.info('[AS] check for user %d that alias "%s" is not in use in chat %d' % (user_id, alias, chat_id))
         user_id_row = self._cursor.execute('''SELECT user_id
                                               FROM aliases
                                               WHERE chat_id = ? AND
@@ -36,11 +37,13 @@ class AliasesStorage2(object):
         return user_id_row[0] == user_id
 
     def add_alias(self, user_id, chat_id, alias):
+        logging.info('[AS] add alias "%s" for user %d in chat %d' % (alias, user_id, chat_id))
         self._cursor.execute('''INSERT OR IGNORE INTO aliases(user_id, chat_id, alias)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, alias))
         self._connection.commit()
 
     def remove_alias(self, user_id, chat_id, alias):
+        logging.info('[AS] remove alias "%s" for user %d in chat %d' % (alias, user_id, chat_id))
         self._cursor.execute('''DELETE
                                 FROM aliases
                                 WHERE user_id = ? AND
@@ -49,6 +52,7 @@ class AliasesStorage2(object):
         self._connection.commit()
 
     def remove_all_aliases(self, user_id, chat_id):
+        logging.info('[AS] remove all aliases for user %d in chat %d' % (user_id, chat_id))
         self._cursor.execute('''DELETE
                                 FROM aliases
                                 WHERE user_id = ? AND
@@ -56,6 +60,7 @@ class AliasesStorage2(object):
         self._connection.commit()
 
     def get_aliases(self, user_id, chat_id):
+        logging.info('[AS] get all aliases for user %d in chat %d' % (user_id, chat_id))
         rows = self._cursor.execute('''SELECT alias
                                        FROM aliases
                                        WHERE user_id = ? AND
@@ -63,6 +68,7 @@ class AliasesStorage2(object):
         return list(map(lambda row: row[0], rows))
 
     def contains_alias(self, text, chat_id):
+        logging.info('[AS] check string "%s" contains aliases for chat %d' % (text, chat_id))
         rows = self._cursor.execute('''SELECT user_id
                                        FROM aliases
                                        WHERE chat_id = ? AND
@@ -70,16 +76,19 @@ class AliasesStorage2(object):
         return list(map(lambda row: row[0], rows))
 
     def enable_aliasing(self, user_id, chat_id):
+        logging.info('[AS] enable aliasing for user %d in chat %d' % (user_id, chat_id))
         self._cursor.execute('''INSERT OR REPLACE INTO states(user_id, chat_id, state)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, ALIASING_ENABLED))
         self._connection.commit()
 
     def disable_aliasing(self, user_id, chat_id):
+        logging.info('[AS] disable aliasing for user %d in chat %d' % (user_id, chat_id))
         self._cursor.execute('''INSERT OR REPLACE INTO states(user_id, chat_id, state)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, ALIASING_DISABLED))
         self._connection.commit()
 
     def is_aliasing_enabled(self, user_id, chat_id):
+        logging.info('[AS] check if aliasing enabled for user %d in chat %d' % (user_id, chat_id))
         state_row = self._cursor.execute('''SELECT state
                                             FROM states
                                             WHERE chat_id = ? AND
