@@ -43,7 +43,7 @@ class AliasesStorage2(object):
         self._connection.commit()
 
     def remove_alias(self, user_id, chat_id, alias):
-        # logging.info('[AS] remove alias "%s" for user %d in chat %d' % (alias, user_id, chat_id))
+        logging.info('[AS] remove alias "%s" for user %d in chat %d' % (alias, user_id, chat_id))
         self._cursor.execute('''DELETE
                                 FROM aliases
                                 WHERE user_id = ? AND
@@ -52,7 +52,7 @@ class AliasesStorage2(object):
         self._connection.commit()
 
     def remove_all_aliases(self, user_id, chat_id):
-        # logging.info('[AS] remove all aliases for user %d in chat %d' % (user_id, chat_id))
+        logging.info('[AS] remove all aliases for user %d in chat %d' % (user_id, chat_id))
         self._cursor.execute('''DELETE
                                 FROM aliases
                                 WHERE user_id = ? AND
@@ -60,7 +60,7 @@ class AliasesStorage2(object):
         self._connection.commit()
 
     def get_aliases(self, user_id, chat_id):
-        # logging.info('[AS] get all aliases for user %d in chat %d' % (user_id, chat_id))
+        logging.info('[AS] get all aliases for user %d in chat %d' % (user_id, chat_id))
         rows = self._cursor.execute('''SELECT alias
                                        FROM aliases
                                        WHERE user_id = ? AND
@@ -68,7 +68,7 @@ class AliasesStorage2(object):
         return list(map(lambda row: row[0], rows))
 
     def contains_alias(self, text, chat_id):
-        # logging.info('[AS] check string "%s" contains aliases for chat %d' % (text, chat_id))
+        logging.info('[AS] check string "%s" contains aliases for chat %d' % (text, chat_id))
         rows = self._cursor.execute('''SELECT user_id
                                        FROM aliases
                                        WHERE chat_id = ? AND
@@ -76,19 +76,19 @@ class AliasesStorage2(object):
         return list(map(lambda row: row[0], rows))
 
     def enable_aliasing(self, user_id, chat_id):
-        # logging.info('[AS] enable aliasing for user %d in chat %d' % (user_id, chat_id))
+        logging.info('[AS] enable aliasing for user %d in chat %d' % (user_id, chat_id))
         self._cursor.execute('''INSERT OR REPLACE INTO states(user_id, chat_id, state)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, ALIASING_ENABLED))
         self._connection.commit()
 
     def disable_aliasing(self, user_id, chat_id):
-        # logging.info('[AS] disable aliasing for user %d in chat %d' % (user_id, chat_id))
+        logging.info('[AS] disable aliasing for user %d in chat %d' % (user_id, chat_id))
         self._cursor.execute('''INSERT OR REPLACE INTO states(user_id, chat_id, state)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, ALIASING_DISABLED))
         self._connection.commit()
 
     def is_aliasing_enabled(self, user_id, chat_id):
-        # logging.info('[AS] check if aliasing enabled for user %d in chat %d' % (user_id, chat_id))
+        logging.info('[AS] check if aliasing enabled for user %d in chat %d' % (user_id, chat_id))
         state_row = self._cursor.execute('''SELECT state
                                             FROM states
                                             WHERE chat_id = ? AND
