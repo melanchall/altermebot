@@ -15,7 +15,6 @@ from CommandHandlers.OffCommandHandler import OffCommandHandler
 from MessageHandlers.AliasMessageHandler import AliasMessageHandler
 
 from AliasesStorage import AliasesStorage
-from AliasesStorage2 import AliasesStorage2
 
 from MessageQueueBot import MessageQueueBot
 
@@ -32,7 +31,6 @@ class Bot(object):
         self._dispatcher = self._updater.dispatcher
 
         self._aliases_storage = AliasesStorage()
-        self._aliases_storage2 = AliasesStorage2()
 
         self.__setup_command_handlers()
         self.__setup_message_handlers()
@@ -50,14 +48,14 @@ class Bot(object):
 
     def __setup_command_handlers(self):
         handlers = [
-            AliasCommandHandler(self._aliases_storage2),
-            ListCommandHandler(self._aliases_storage2),
+            AliasCommandHandler(self._aliases_storage),
+            ListCommandHandler(self._aliases_storage),
             HelpCommandHandler(),
-            RemoveCommandHandler(self._aliases_storage2),
-            ClearCommandHandler(self._aliases_storage2),
-            AdminCommandHandler(self._aliases_storage2),
-            OnCommandHandler(self._aliases_storage2),
-            OffCommandHandler(self._aliases_storage2)
+            RemoveCommandHandler(self._aliases_storage),
+            ClearCommandHandler(self._aliases_storage),
+            AdminCommandHandler(self._aliases_storage),
+            OnCommandHandler(self._aliases_storage),
+            OffCommandHandler(self._aliases_storage)
         ]
 
         for handler in handlers:
@@ -65,7 +63,7 @@ class Bot(object):
 
     def __setup_message_handlers(self):
         handlers = [
-            AliasMessageHandler(self._aliases_storage, self._aliases_storage2)
+            AliasMessageHandler(self._aliases_storage)
         ]
 
         for handler in handlers:
