@@ -18,7 +18,7 @@ class AliasesStorage(object):
         self.__create_tables()
 
     def get_aliases_count(self, user_id, chat_id):
-        # logging.info('[AS] get aliases count for user %d in chat %d' % (user_id, chat_id))
+        logging.info('[AS] get aliases count for user %d in chat %d' % (user_id, chat_id))
         (count,) = self._cursor.execute('''SELECT COUNT(*)
                                            FROM aliases
                                            WHERE user_id = ? AND
@@ -26,7 +26,7 @@ class AliasesStorage(object):
         return count
 
     def check_alias_is_not_in_use(self, user_id, chat_id, alias):
-        # logging.info('[AS] check for user %d that alias "%s" is not in use in chat %d' % (user_id, alias, chat_id))
+        logging.info('[AS] check for user %d that alias "%s" is not in use in chat %d' % (user_id, alias, chat_id))
         user_id_row = self._cursor.execute('''SELECT user_id
                                               FROM aliases
                                               WHERE chat_id = ? AND
@@ -37,7 +37,7 @@ class AliasesStorage(object):
         return user_id_row[0] == user_id
 
     def add_alias(self, user_id, chat_id, alias):
-        # logging.info('[AS] add alias "%s" for user %d in chat %d' % (alias, user_id, chat_id))
+        logging.info('[AS] add alias "%s" for user %d in chat %d' % (alias, user_id, chat_id))
         self._cursor.execute('''INSERT OR IGNORE INTO aliases(user_id, chat_id, alias)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, alias))
         self._connection.commit()
