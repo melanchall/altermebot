@@ -38,7 +38,7 @@ class AliasesStorage(object):
 
     def add_alias(self, user_id, chat_id, alias):
         logging.info('[AS] add alias "%s" for user %d in chat %d' % (alias, user_id, chat_id))
-        self._cursor.execute('''INSERT OR IGNORE INTO aliases(user_id, chat_id, alias)
+        self._cursor.execute('''INSERT OR IGNORE INTO aliases(user_id, chat_id, alias, date)
                                 VALUES (?, ?, ?, datetime('now'))''', (user_id, chat_id, alias))
         self._connection.commit()
 
