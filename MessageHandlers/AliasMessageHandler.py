@@ -48,7 +48,6 @@ class AliasMessageHandler(MessageHandler):
         bot.send_message(chat_id=chat_id,
                          text=text,
                          reply_to_message_id=message.message_id,
-                         parse_mode=parse_mode,
-                         disable_notification=True)
+                         parse_mode=parse_mode)
 
         logging.info('message: exited')
