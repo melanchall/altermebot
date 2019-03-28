@@ -8,7 +8,6 @@ from CommandHandlers.ListCommandHandler import ListCommandHandler
 from CommandHandlers.HelpCommandHandler import HelpCommandHandler
 from CommandHandlers.RemoveCommandHandler import RemoveCommandHandler
 from CommandHandlers.ClearCommandHandler import ClearCommandHandler
-from CommandHandlers.AdminCommandHandler import AdminCommandHandler
 from CommandHandlers.OnCommandHandler import OnCommandHandler
 from CommandHandlers.OffCommandHandler import OffCommandHandler
 
@@ -53,7 +52,6 @@ class Bot(object):
             HelpCommandHandler(),
             RemoveCommandHandler(self._aliases_storage),
             ClearCommandHandler(self._aliases_storage),
-            AdminCommandHandler(self._aliases_storage),
             OnCommandHandler(self._aliases_storage),
             OffCommandHandler(self._aliases_storage)
         ]
