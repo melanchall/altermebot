@@ -97,6 +97,11 @@ class AliasesStorage(object):
             return True
 
         return state_row[0] == ALIASING_ENABLED
+    
+    def log_command(self, user_id, chat_id, command, args):
+        self._cursor.execute('''INSERT OR IGNORE INTO commands(user_id, chat_id, command, args, date)
+                                VALUES (?, ?, ?, ?, datetime('now'))''', (user_id, chat_id, command, args))
+        self._connection.commit()
 
     @staticmethod
     def __regexp(text, alias):
@@ -109,6 +114,7 @@ class AliasesStorage(object):
     def __create_tables(self):
         self.__create_aliases_table()
         self.__create_states_table()
+        self.__create_commands_table()
 
     def __create_aliases_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS aliases (
@@ -116,6 +122,7 @@ class AliasesStorage(object):
                                 user_id INTEGER NOT NULL,
                                 chat_id INTEGER NOT NULL,
                                 alias   TEXT NOT NULL,
+                                date    TEXT NOT NULL,
                                 UNIQUE (user_id, chat_id, alias))''')
 
     def __create_states_table(self):
@@ -125,3 +132,12 @@ class AliasesStorage(object):
                                 chat_id INTEGER NOT NULL,
                                 state   INTEGER NOT NULL,
                                 UNIQUE (user_id, chat_id))''')
+        
+    def __create_commands_table(self):
+        self._cursor.execute('''CREATE TABLE IF NOT EXISTS commands (
+                                id      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+                                user_id INTEGER NOT NULL,
+                                chat_id INTEGER NOT NULL,
+                                command TEXT NOT NULL,
+                                args    TEXT,
+                                date    TEXT NOT NULL)''')
