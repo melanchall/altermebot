@@ -98,9 +98,9 @@ class AliasesStorage(object):
 
         return state_row[0] == ALIASING_ENABLED
     
-    def log_command(self, user_id, chat_id, command, args):
-        self._cursor.execute('''INSERT OR IGNORE INTO commands(user_id, chat_id, command, args, date)
-                                VALUES (?, ?, ?, ?, datetime('now'))''', (user_id, chat_id, command, args))
+    def log_command(self, user_id, chat_id, command, comment):
+        self._cursor.execute('''INSERT OR IGNORE INTO commands(user_id, chat_id, command, comment, date)
+                                VALUES (?, ?, ?, ?, datetime('now'))''', (user_id, chat_id, command, comment))
         self._connection.commit()
 
     @staticmethod
@@ -139,5 +139,5 @@ class AliasesStorage(object):
                                 user_id INTEGER NOT NULL,
                                 chat_id INTEGER NOT NULL,
                                 command TEXT NOT NULL,
-                                args    TEXT,
+                                comment TEXT NOT NULL,
                                 date    TEXT NOT NULL)''')
