@@ -9,7 +9,7 @@ class AliasesStorage(object):
     """description of class"""
 
     def __init__(self):
-        self._connection = sqlite3.connect("aliases2.db", check_same_thread=False)
+        self._connection = sqlite3.connect("alterme.db", check_same_thread=False)
         self._connection.create_function('regexp', 2, self.__regexp)
         self._connection.create_function('eqnocase', 2, self.__eqnocase)
 
