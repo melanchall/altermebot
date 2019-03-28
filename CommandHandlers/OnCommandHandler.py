@@ -1,5 +1,3 @@
-import logging
-
 from telegram.ext import CommandHandler
 from telegram import ParseMode
 
@@ -7,13 +5,11 @@ from telegram import ParseMode
 class OnCommandHandler(CommandHandler):
     """description of class"""
 
-    def __init__(self, aliases_storage):
+    def __init__(self, db_manager):
         super().__init__('on', self.__handle)
-        self._aliases_storage = aliases_storage
+        self._db_manager = db_manager
 
     def __handle(self, bot, update):
-        logging.info('/on: entered')
-
         message = update.message
         chat_id = message.chat_id
         user_id = message.from_user.id
@@ -27,10 +23,10 @@ class OnCommandHandler(CommandHandler):
         else:
             mention = "@%s" % mention
 
-        self._aliases_storage.enable_aliasing(user_id, chat_id)
+        self._db_manager.enable_aliasing(user_id, chat_id)
 
         bot.send_message(chat_id=chat_id,
                          text="%s, you will be mentioned by your aliases in this chat from now" % mention,
                          parse_mode=parse_mode)
 
-        logging.info('/on: exited')
+        self._db_manager.log_command(user_id, chat_id, 'on', 'OK')

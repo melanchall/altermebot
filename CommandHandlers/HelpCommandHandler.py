@@ -1,5 +1,3 @@
-import logging
-
 from telegram.ext import CommandHandler
 from telegram import ParseMode
 
@@ -12,8 +10,6 @@ class HelpCommandHandler(CommandHandler):
 
     @staticmethod
     def __handle(bot, update):
-        logging.info('/help: entered')
-
         text = '\n'.join([
             '/alias _<alias>_ - Add the specified alias so you can be called with it in the current chat',
             '/list - List all your aliases for the current chat',
@@ -25,5 +21,3 @@ class HelpCommandHandler(CommandHandler):
         bot.send_message(chat_id=update.message.chat_id,
                          text=text,
                          parse_mode=ParseMode.MARKDOWN)
-
-        logging.info('/help: exited')

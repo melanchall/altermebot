@@ -5,7 +5,7 @@ import logging
 from BotUtils import ALIASING_ENABLED, ALIASING_DISABLED
 
 
-class AliasesStorage(object):
+class DbManager(object):
     """description of class"""
 
     def __init__(self):
@@ -99,6 +99,7 @@ class AliasesStorage(object):
         return state_row[0] == ALIASING_ENABLED
     
     def log_command(self, user_id, chat_id, command, comment):
+        logging.info("command '%s' has been executed by user '%d' in chat '%s': %s." % (command, user_id, chat_id, comment))
         self._cursor.execute('''INSERT OR IGNORE INTO commands(user_id, chat_id, command, comment, date)
                                 VALUES (?, ?, ?, ?, datetime('now'))''', (user_id, chat_id, command, comment))
         self._connection.commit()

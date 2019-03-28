@@ -1,5 +1,3 @@
-import logging
-
 from telegram.ext import CommandHandler
 from telegram.constants import MAX_MESSAGE_LENGTH
 from telegram import ParseMode
@@ -8,13 +6,11 @@ from telegram import ParseMode
 class ListCommandHandler(CommandHandler):
     """description of class"""
 
-    def __init__(self, aliases_storage):
+    def __init__(self, db_manager):
         super().__init__('list', self.__handle)
-        self._aliases_storage = aliases_storage
+        self._db_manager = db_manager
 
     def __handle(self, bot, update):
-        logging.info('/list: entered')
-
         message = update.message
         chat_id = message.chat_id
         user_id = message.from_user.id
@@ -28,7 +24,7 @@ class ListCommandHandler(CommandHandler):
         else:
             mention = "@%s" % mention
 
-        aliases = self._aliases_storage.get_aliases(user_id, chat_id)
+        aliases = self._db_manager.get_aliases(user_id, chat_id)
 
         if not any(aliases):
             bot.send_message(chat_id=chat_id,
@@ -44,4 +40,4 @@ class ListCommandHandler(CommandHandler):
             if len(text) > 0:
                 bot.send_message(chat_id=chat_id, text=text, parse_mode=parse_mode)
 
-        logging.info('/list: exited')
+        self._db_manager.log_command(user_id, chat_id, 'list', 'OK')

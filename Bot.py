@@ -13,7 +13,7 @@ from CommandHandlers.OffCommandHandler import OffCommandHandler
 
 from MessageHandlers.AliasMessageHandler import AliasMessageHandler
 
-from AliasesStorage import AliasesStorage
+from DbManager import DbManager
 
 from MessageQueueBot import MessageQueueBot
 
@@ -29,7 +29,7 @@ class Bot(object):
         self._updater = Updater(bot=bot)
         self._dispatcher = self._updater.dispatcher
 
-        self._aliases_storage = AliasesStorage()
+        self._db_manager = DbManager()
 
         self.__setup_command_handlers()
         self.__setup_message_handlers()
@@ -47,13 +47,13 @@ class Bot(object):
 
     def __setup_command_handlers(self):
         handlers = [
-            AliasCommandHandler(self._aliases_storage),
-            ListCommandHandler(self._aliases_storage),
+            AliasCommandHandler(self._db_manager),
+            ListCommandHandler(self._db_manager),
             HelpCommandHandler(),
-            RemoveCommandHandler(self._aliases_storage),
-            ClearCommandHandler(self._aliases_storage),
-            OnCommandHandler(self._aliases_storage),
-            OffCommandHandler(self._aliases_storage)
+            RemoveCommandHandler(self._db_manager),
+            ClearCommandHandler(self._db_manager),
+            OnCommandHandler(self._db_manager),
+            OffCommandHandler(self._db_manager)
         ]
 
         for handler in handlers:
@@ -61,7 +61,7 @@ class Bot(object):
 
     def __setup_message_handlers(self):
         handlers = [
-            AliasMessageHandler(self._aliases_storage)
+            AliasMessageHandler(self._db_manager)
         ]
 
         for handler in handlers:

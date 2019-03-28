@@ -1,5 +1,3 @@
-import logging
-
 from telegram.ext import CommandHandler
 from telegram import ParseMode
 
@@ -7,13 +5,11 @@ from telegram import ParseMode
 class OffCommandHandler(CommandHandler):
     """description of class"""
 
-    def __init__(self, aliases_storage):
+    def __init__(self, db_manager):
         super().__init__('off', self.__handle)
-        self._aliases_storage = aliases_storage
+        self._db_manager = db_manager
 
     def __handle(self, bot, update):
-        logging.info('/off: entered')
-
         message = update.message
         chat_id = message.chat_id
         user_id = message.from_user.id
@@ -27,10 +23,10 @@ class OffCommandHandler(CommandHandler):
         else:
             mention = "@%s" % mention
 
-        self._aliases_storage.disable_aliasing(user_id, chat_id)
+        self._db_manager.disable_aliasing(user_id, chat_id)
 
         bot.send_message(chat_id=chat_id,
                          text="%s, you will not be mentioned by your aliases in this chat from now" % mention,
                          parse_mode=parse_mode)
 
-        logging.info('/off: exited')
+        self._db_manager.log_command(user_id, chat_id, 'off', 'OK')
