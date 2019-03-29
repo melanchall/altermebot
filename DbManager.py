@@ -97,6 +97,12 @@ class DbManager(object):
             return True
 
         return state_row[0] == ALIASING_ENABLED
+
+    def update_chat_id(self, old_chat_id, new_chat_id):
+        self._cursor.execute('''UPDATE aliases SET chat_id = ? where chat_id = ?''', (old_chat_id, new_chat_id))
+        self._cursor.execute('''UPDATE states SET chat_id = ? where chat_id = ?''', (old_chat_id, new_chat_id))
+        self._cursor.execute('''UPDATE commands SET chat_id = ? where chat_id = ?''', (old_chat_id, new_chat_id))
+        self._connection.commit()
     
     def log_command(self, user_id, chat_id, command, comment):
         logging.info("command '%s' has been executed by user '%d' in chat '%s': %s." % (command, user_id, chat_id, comment))
