@@ -2,7 +2,8 @@ import sqlite3
 import re
 import logging
 
-from BotUtils import ALIASING_ENABLED, ALIASING_DISABLED
+from BotUtils import (ALIASING_ENABLED, ALIASING_DISABLED,
+                      HEALTH_SYSTEM_MESSAGING, HEALTH_SYSTEM_MESSAGING_OK)
 
 
 class DbManager(object):
@@ -110,6 +111,11 @@ class DbManager(object):
                                 VALUES (?, ?, ?, ?, datetime('now'))''', (user_id, chat_id, command, comment))
         self._connection.commit()
 
+    def update_health_info_messaging_ok(self):
+        self._cursor.execute('''INSERT OR REPLACE INTO health (system, date, result)
+                                VALUES (?, datetime('now'), ?)''', (HEALTH_SYSTEM_MESSAGING, HEALTH_SYSTEM_MESSAGING_OK))
+        self._connection.commit()
+
     @staticmethod
     def __regexp(text, alias):
         return 1 if alias and re.search(r'(?i)\b%s\b' % re.escape(alias), text) else 0
@@ -122,6 +128,7 @@ class DbManager(object):
         self.__create_aliases_table()
         self.__create_states_table()
         self.__create_commands_table()
+        self.__create_health_table()
 
     def __create_aliases_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS aliases (
@@ -148,3 +155,10 @@ class DbManager(object):
                                 command TEXT NOT NULL,
                                 comment TEXT NOT NULL,
                                 date    TEXT NOT NULL)''')
+
+    def __create_health_table(self):
+        self._cursor.execute('''CREATE TABLE IF NOT EXISTS health (
+                                id     INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+                                system INTEGER NOT NULL UNIQUE,
+                                date   TEXT NOT NULL,
+                                result INTEGER NOT NULL)''')

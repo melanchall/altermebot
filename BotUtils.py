@@ -8,6 +8,9 @@ ALIASES_MAX_COUNT = 10
 ALIASING_ENABLED = 1
 ALIASING_DISABLED = 0
 
+HEALTH_SYSTEM_MESSAGING = 0
+HEALTH_SYSTEM_MESSAGING_OK = 1
+
 
 def escape_markdown(text):
     """Helper function to escape telegram markup symbols."""

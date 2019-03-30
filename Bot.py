@@ -1,5 +1,6 @@
 import os
 import logging
+import threading
 
 from telegram.ext import Updater, MessageQueue
 from telegram.error import (TelegramError, ChatMigrated)
@@ -15,6 +16,7 @@ from CommandHandlers.OffCommandHandler import OffCommandHandler
 from MessageHandlers.AliasMessageHandler import AliasMessageHandler
 
 from DbManager import DbManager
+from HealthChecker import HealthChecker
 
 from MessageQueueBot import MessageQueueBot
 
@@ -32,6 +34,9 @@ class Bot(object):
 
         self._db_manager = DbManager()
 
+        self._health_checker = HealthChecker(self._updater.bot, self._db_manager)
+        self._health_check_interval = int(os.environ.get('HEALTH_CHECK_INTERVAL'))
+
         self.__setup_command_handlers()
         self.__setup_message_handlers()
         self.__setup_error_handler()
@@ -39,6 +44,7 @@ class Bot(object):
     def start(self):
         logging.info('Starting the bot...')
         self._updater.start_polling()
+        self.__perform_health_check()
         logging.info('Bot is started')
         self._updater.idle()
 
@@ -55,6 +61,11 @@ class Bot(object):
             self._db_manager.update_chat_id(update.message.chat_id, e.new_chat_id)
         except TelegramError as e:
             logging.error('Unknown error: %s' % e.message)
+
+    def __perform_health_check(self):
+        self._health_checker.perform_health_check()
+        timer = threading.Timer(self._health_check_interval, self.__perform_health_check)
+        timer.start()
 
     def __setup_error_handler(self):
         self._dispatcher.add_error_handler(self.error_callback)
