@@ -181,6 +181,7 @@ class DbManager(object):
                                 id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
                                 lang TEXT UNIQUE)''')
         for language in Languages.LANGUAGES:
+            logging.info(language)
             self._cursor.execute('''INSERT OR REPLACE INTO languages(lang)
                                     VALUES (?)''', language)
         self._connection.commit()
