@@ -5,6 +5,8 @@ import logging
 from BotUtils import (ALIASING_ENABLED, ALIASING_DISABLED,
                       HEALTH_SYSTEM_MESSAGING, HEALTH_SYSTEM_MESSAGING_OK)
 
+from Localization.Languages import Languages
+
 
 class DbManager(object):
     """description of class"""
@@ -116,6 +118,15 @@ class DbManager(object):
                                 VALUES (?, datetime('now'), ?)''', (HEALTH_SYSTEM_MESSAGING, HEALTH_SYSTEM_MESSAGING_OK))
         self._connection.commit()
 
+    def switch_language(self, user_id, chat_id, language):
+        language_id_row = self._cursor.execute('''SELECT id
+                                                  FROM languages
+                                                  WHERE lang = ?''', language).fetchone()
+        language_id = language_id_row[0]
+        self._cursor.execute('''INSERT OR REPLACE INTO users_preferences (user_id, chat_id, lang_id)
+                                VALUES (?, ?, ?)''', (user_id, chat_id, language_id))
+        self._connection.commit()
+
     @staticmethod
     def __regexp(text, alias):
         return 1 if alias and re.search(r'(?i)\b%s\b' % re.escape(alias), text) else 0
@@ -129,6 +140,8 @@ class DbManager(object):
         self.__create_states_table()
         self.__create_commands_table()
         self.__create_health_table()
+        self.__create_languages_table()
+        self.__users_preferences_table()
 
     def __create_aliases_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS aliases (
@@ -162,3 +175,20 @@ class DbManager(object):
                                 system INTEGER NOT NULL UNIQUE,
                                 date   TEXT NOT NULL,
                                 result INTEGER NOT NULL)''')
+
+    def __create_languages_table(self):
+        self._cursor.execute('''CREATE TABLE IF NOT EXISTS languages (
+                                id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+                                lang TEXT UNIQUE)''')
+        for language in Languages.LANGUAGES:
+            self._cursor.execute('''INSERT OR REPLACE INTO languages(lang)
+                                    VALUES (?)''', language)
+        self._connection.commit()
+
+    def __users_preferences_table(self):
+        self._cursor.execute('''CREATE TABLE IF NOT EXISTS users_preferences (
+                                id      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
+                                user_id INTEGER NOT NULL,
+                                chat_id INTEGER NOT NULL,
+                                lang_id INTEGER NOT NULL,
+                                UNIQUE (user_id, chat_id))''')

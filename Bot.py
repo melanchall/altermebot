@@ -12,6 +12,7 @@ from CommandHandlers.RemoveCommandHandler import RemoveCommandHandler
 from CommandHandlers.ClearCommandHandler import ClearCommandHandler
 from CommandHandlers.OnCommandHandler import OnCommandHandler
 from CommandHandlers.OffCommandHandler import OffCommandHandler
+from CommandHandlers.LangCommandHandler import LangCommandHandler
 
 from MessageHandlers.AliasMessageHandler import AliasMessageHandler
 
@@ -78,7 +79,8 @@ class Bot(object):
             RemoveCommandHandler(self._db_manager),
             ClearCommandHandler(self._db_manager),
             OnCommandHandler(self._db_manager),
-            OffCommandHandler(self._db_manager)
+            OffCommandHandler(self._db_manager),
+            LangCommandHandler(self._db_manager)
         ]
 
         for handler in handlers:
