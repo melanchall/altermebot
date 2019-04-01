@@ -13,6 +13,7 @@ class DbManager(object):
 
     def __init__(self):
         self._connection = sqlite3.connect("alterme.db", check_same_thread=False)
+        self._connection.set_trace_callback(logging.debug)
         self._connection.create_function('regexp', 2, self.__regexp)
         self._connection.create_function('eqnocase', 2, self.__eqnocase)
 
