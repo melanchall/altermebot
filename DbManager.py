@@ -195,11 +195,14 @@ class DbManager(object):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS languages (
                                 id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
                                 lang TEXT UNIQUE)''')
+        logging.info(Languages.LANGUAGES)
         for language in Languages.LANGUAGES:
             logging.info(language)
             self._cursor.execute('''INSERT OR REPLACE INTO languages(lang)
                                     VALUES (?)''', language)
+            logging.info('executed')
             self._connection.commit()
+            logging.info('committed')
 
     def __users_preferences_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS users_preferences (
