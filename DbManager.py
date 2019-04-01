@@ -120,12 +120,8 @@ class DbManager(object):
         self._connection.commit()
 
     def switch_language(self, user_id, chat_id, language):
-        language_id_row = self._cursor.execute('''SELECT id
-                                                  FROM languages
-                                                  WHERE lang = ?''', (language,)).fetchone()
-        language_id = language_id_row[0]
-        self._cursor.execute('''INSERT OR REPLACE INTO users_preferences (user_id, chat_id, lang_id)
-                                VALUES (?, ?, ?)''', (user_id, chat_id, language_id))
+        self._cursor.execute('''INSERT OR REPLACE INTO users_preferences (user_id, chat_id, lang)
+                                VALUES (?, ?, ?)''', (user_id, chat_id, language))
         self._connection.commit()
 
     def get_language(self, user_id, chat_id):
