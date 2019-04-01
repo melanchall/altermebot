@@ -184,7 +184,7 @@ class DbManager(object):
             logging.info(language)
             self._cursor.execute('''INSERT OR REPLACE INTO languages(lang)
                                     VALUES (?)''', language)
-        self._connection.commit()
+            self._connection.commit()
 
     def __users_preferences_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS users_preferences (
