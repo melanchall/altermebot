@@ -27,11 +27,15 @@ class LangCommandHandler(CommandHandler):
         else:
             mention = "@%s" % mention
 
+        #
+
+        user_language = self._db_manager.get_language(user_id, chat_id)
+
         # Check that language is specified
 
         if not any(args):
             bot.send_message(chat_id=chat_id,
-                             text=Strings.CONTENT[Strings.LANGUAGE_IS_NOT_SPECIFIED] % mention,
+                             text=Strings.CONTENT[user_language][Strings.LANGUAGE_IS_NOT_SPECIFIED] % mention,
                              parse_mode=parse_mode)
             self._db_manager.log_command(user_id, chat_id, 'lang', 'Rejected due to no arguments provided')
             return
@@ -42,7 +46,7 @@ class LangCommandHandler(CommandHandler):
 
         if language not in Languages.LANGUAGES:
             bot.send_message(chat_id=chat_id,
-                             text=Strings.CONTENT[Strings.LANGUAGE_IS_INVALID] % (mention, ', '.join(Languages.LANGUAGES)),
+                             text=Strings.CONTENT[user_language][Strings.LANGUAGE_IS_INVALID] % (mention, ', '.join(Languages.LANGUAGES)),
                              parse_mode=parse_mode)
             self._db_manager.log_command(user_id, chat_id, 'lang', 'Rejected due to unknown language')
             return
@@ -51,7 +55,7 @@ class LangCommandHandler(CommandHandler):
 
         self._db_manager.switch_language(user_id, chat_id, language)
         bot.send_message(chat_id=chat_id,
-                         text=Strings.CONTENT[Strings.LANGUAGE_SWITCHED]
+                         text=Strings.CONTENT[user_language][Strings.LANGUAGE_SWITCHED]
                               % (escape_markdown(mention) if parse_mode is None else mention),
                          parse_mode=ParseMode.MARKDOWN)
 

@@ -127,6 +127,21 @@ class DbManager(object):
                                 VALUES (?, ?, ?)''', (user_id, chat_id, language_id))
         self._connection.commit()
 
+    def get_language(self, user_id, chat_id):
+        language_id_row = self._cursor.execute('''SELECT lang_id
+                                                  FROM users_preferences
+                                                  WHERE user_id = ? AND
+                                                        chat_id = ?''', (user_id, chat_id)).fetchone()
+
+        if language_id_row is None:
+            return Languages.DEFAULT
+
+        language_id = language_id_row[0]
+        language_row = self._cursor.execute('''SELECT lang
+                                               FROM languages
+                                               WHERE id = ?''', language_id).fetchone()
+        return language_row[0]
+
     @staticmethod
     def __regexp(text, alias):
         return 1 if alias and re.search(r'(?i)\b%s\b' % re.escape(alias), text) else 0
