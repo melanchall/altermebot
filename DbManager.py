@@ -13,7 +13,6 @@ class DbManager(object):
 
     def __init__(self):
         self._connection = sqlite3.connect("alterme.db", check_same_thread=False)
-        self._connection.set_trace_callback(logging.debug)
         self._connection.create_function('regexp', 2, self.__regexp)
         self._connection.create_function('eqnocase', 2, self.__eqnocase)
 
@@ -122,7 +121,7 @@ class DbManager(object):
     def switch_language(self, user_id, chat_id, language):
         language_id_row = self._cursor.execute('''SELECT id
                                                   FROM languages
-                                                  WHERE lang = ?''', language).fetchone()
+                                                  WHERE lang = ?''', (language,)).fetchone()
         language_id = language_id_row[0]
         self._cursor.execute('''INSERT OR REPLACE INTO users_preferences (user_id, chat_id, lang_id)
                                 VALUES (?, ?, ?)''', (user_id, chat_id, language_id))
@@ -140,7 +139,7 @@ class DbManager(object):
         language_id = language_id_row[0]
         language_row = self._cursor.execute('''SELECT lang
                                                FROM languages
-                                               WHERE id = ?''', language_id).fetchone()
+                                               WHERE id = ?''', (language_id,)).fetchone()
         return language_row[0]
 
     @staticmethod
@@ -198,12 +197,9 @@ class DbManager(object):
                                 lang TEXT UNIQUE)''')
         logging.info(Languages.LANGUAGES)
         for language in Languages.LANGUAGES:
-            logging.info(language)
             self._cursor.execute('''INSERT OR REPLACE INTO languages(lang)
-                                    VALUES (?)''', language)
-            logging.info('executed')
+                                    VALUES (?)''', (language,))
             self._connection.commit()
-            logging.info('committed')
 
     def __users_preferences_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS users_preferences (
