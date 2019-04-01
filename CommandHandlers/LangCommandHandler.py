@@ -54,8 +54,9 @@ class LangCommandHandler(CommandHandler):
         # Change language
 
         self._db_manager.switch_language(user_id, chat_id, language)
+        user_language = self._db_manager.get_language(user_id, chat_id)
         bot.send_message(chat_id=chat_id,
-                         text=Strings.CONTENT[language][Strings.LANGUAGE_SWITCHED]
+                         text=Strings.CONTENT[user_language][Strings.LANGUAGE_SWITCHED]
                               % (escape_markdown(mention) if parse_mode is None else mention),
                          parse_mode=ParseMode.MARKDOWN)
 
