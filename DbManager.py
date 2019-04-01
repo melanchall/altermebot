@@ -13,7 +13,6 @@ class DbManager(object):
 
     def __init__(self):
         self._connection = sqlite3.connect("alterme.db", check_same_thread=False)
-        self._connection.set_trace_callback(logging.info)
         self._connection.create_function('regexp', 2, self.__regexp)
         self._connection.create_function('eqnocase', 2, self.__eqnocase)
 
@@ -129,18 +128,14 @@ class DbManager(object):
         self._connection.commit()
 
     def get_language(self, user_id, chat_id):
-        language_id_row = self._cursor.execute('''SELECT lang_id
-                                                  FROM users_preferences
-                                                  WHERE user_id = ? AND
-                                                        chat_id = ?''', (user_id, chat_id)).fetchone()
+        language_row = self._cursor.execute('''SELECT lang
+                                               FROM users_preferences
+                                               WHERE user_id = ? AND
+                                                     chat_id = ?''', (user_id, chat_id)).fetchone()
 
-        if language_id_row is None:
+        if language_row is None:
             return Languages.DEFAULT
 
-        language_id = language_id_row[0]
-        language_row = self._cursor.execute('''SELECT lang
-                                               FROM languages
-                                               WHERE id = ?''', (language_id,)).fetchone()
         return language_row[0]
 
     @staticmethod
@@ -156,7 +151,6 @@ class DbManager(object):
         self.__create_states_table()
         self.__create_commands_table()
         self.__create_health_table()
-        self.__create_languages_table()
         self.__users_preferences_table()
 
     def __create_aliases_table(self):
@@ -192,20 +186,10 @@ class DbManager(object):
                                 date   TEXT NOT NULL,
                                 result INTEGER NOT NULL)''')
 
-    def __create_languages_table(self):
-        self._cursor.execute('''CREATE TABLE IF NOT EXISTS languages (
-                                id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
-                                lang TEXT UNIQUE)''')
-        logging.info(Languages.LANGUAGES)
-        for language in Languages.LANGUAGES:
-            self._cursor.execute('''INSERT OR REPLACE INTO languages(lang)
-                                    VALUES (?)''', (language,))
-            self._connection.commit()
-
     def __users_preferences_table(self):
         self._cursor.execute('''CREATE TABLE IF NOT EXISTS users_preferences (
                                 id      INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,
                                 user_id INTEGER NOT NULL,
                                 chat_id INTEGER NOT NULL,
-                                lang_id INTEGER NOT NULL,
+                                lang    TEXT NOT NULL,
                                 UNIQUE (user_id, chat_id))''')
