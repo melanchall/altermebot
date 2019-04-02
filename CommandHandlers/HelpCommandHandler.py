@@ -1,23 +1,18 @@
-from telegram.ext import CommandHandler
 from telegram import ParseMode
 
+from CommandHandlers.BaseCommandHandler import BaseCommandHandler
+from Localization.Strings import Strings
 
-class HelpCommandHandler(CommandHandler):
+
+class HelpCommandHandler(BaseCommandHandler):
     """description of class"""
 
-    def __init__(self):
-        super().__init__('help', self.__handle)
+    def __init__(self, db_manager):
+        super().__init__('help', db_manager)
 
-    @staticmethod
-    def __handle(bot, update):
-        text = '\n'.join([
-            '/alias _<alias>_ - Add the specified alias so you can be called with it in the current chat',
-            '/list - List all your aliases for the current chat',
-            '/remove _<alias>_ - Remove the specified alias so you cannot be called with it in the current chat',
-            '/clear - Remove all your aliases in the current chat',
-            '/off - Disable mentioning you by your aliases in the current chat',
-            '/on - Enable mentioning you by your aliases in the current chat',
-            '/help - Show this help message'])
+    def __handle(self, bot, update, args):
+        localizer = self._localizer.get_localizer(update)
+
         bot.send_message(chat_id=update.message.chat_id,
-                         text=text,
+                         text=localizer(Strings.HELP),
                          parse_mode=ParseMode.MARKDOWN)

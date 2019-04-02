@@ -1,15 +1,14 @@
-from telegram.ext import CommandHandler
 from telegram import ParseMode, MessageEntity
 
+from CommandHandlers.BaseCommandHandler import BaseCommandHandler
 from BotUtils import escape_markdown, ALIAS_MAX_LENGTH, ALIAS_MIN_LENGTH, ALIASES_MAX_COUNT
 
 
-class AliasCommandHandler(CommandHandler):
+class AliasCommandHandler(BaseCommandHandler):
     """description of class"""
 
     def __init__(self, db_manager):
-        super().__init__('alias', self.__handle, pass_args=True)
-        self._db_manager = db_manager
+        super().__init__('alias', db_manager)
 
     def __handle(self, bot, update, args):
         message = update.message

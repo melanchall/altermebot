@@ -75,7 +75,7 @@ class Bot(object):
         handlers = [
             AliasCommandHandler(self._db_manager),
             ListCommandHandler(self._db_manager),
-            HelpCommandHandler(),
+            HelpCommandHandler(self._db_manager),
             RemoveCommandHandler(self._db_manager),
             ClearCommandHandler(self._db_manager),
             OnCommandHandler(self._db_manager),
