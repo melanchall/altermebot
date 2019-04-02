@@ -18,6 +18,7 @@ from MessageHandlers.AliasMessageHandler import AliasMessageHandler
 
 from DbManager import DbManager
 from HealthChecker import HealthChecker
+from Localization.Localizer import Localizer
 
 from MessageQueueBot import MessageQueueBot
 
@@ -34,6 +35,7 @@ class Bot(object):
         self._dispatcher = self._updater.dispatcher
 
         self._db_manager = DbManager()
+        self._localizer = Localizer(self._db_manager)
 
         self._health_checker = HealthChecker(self._updater.bot, self._db_manager)
         self._health_check_interval = int(os.environ.get('HEALTH_CHECK_INTERVAL'))
@@ -75,7 +77,7 @@ class Bot(object):
         handlers = [
             AliasCommandHandler(self._db_manager),
             ListCommandHandler(self._db_manager),
-            HelpCommandHandler(self._db_manager),
+            HelpCommandHandler(self._localizer),
             RemoveCommandHandler(self._db_manager),
             ClearCommandHandler(self._db_manager),
             OnCommandHandler(self._db_manager),

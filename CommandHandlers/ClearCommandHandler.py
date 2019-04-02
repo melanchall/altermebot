@@ -1,15 +1,15 @@
+from telegram.ext import CommandHandler
 from telegram import ParseMode
 
-from CommandHandlers.BaseCommandHandler import BaseCommandHandler
 
-
-class ClearCommandHandler(BaseCommandHandler):
+class ClearCommandHandler(CommandHandler):
     """description of class"""
 
     def __init__(self, db_manager):
-        super().__init__('clear', db_manager)
+        super().__init__('clear', self.__handle)
+        self._db_manager = db_manager
 
-    def __handle(self, bot, update, args):
+    def __handle(self, bot, update):
         message = update.message
         chat_id = message.chat_id
         user_id = message.from_user.id
