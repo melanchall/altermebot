@@ -2,6 +2,8 @@ from telegram.ext import CommandHandler
 from telegram.constants import MAX_MESSAGE_LENGTH
 from telegram import ParseMode
 
+from Localization.Strings import Strings
+
 
 class ListCommandHandler(CommandHandler):
     """description of class"""
@@ -15,6 +17,7 @@ class ListCommandHandler(CommandHandler):
         message = update.message
         chat_id = message.chat_id
         user_id = message.from_user.id
+        localizer = self._localizer.get_localizer(update)
 
         user = message.from_user
         mention = user.username
@@ -29,10 +32,10 @@ class ListCommandHandler(CommandHandler):
 
         if not any(aliases):
             bot.send_message(chat_id=chat_id,
-                             text="%s, you have no aliases for this chat" % mention,
+                             text=localizer(Strings.ALIASES_LIST_IS_EMPTY) % mention,
                              parse_mode=parse_mode)
         else:
-            text = "%s, your aliases for this chat are:\n%s" % (mention, '\n'.join(aliases))
+            text = localizer(Strings.ALIASES_LIST) % (mention, '\n'.join(aliases))
             while len(text) > MAX_MESSAGE_LENGTH:
                 part = text[0:MAX_MESSAGE_LENGTH]
                 bot.send_message(chat_id=chat_id, text=part, parse_mode=parse_mode)

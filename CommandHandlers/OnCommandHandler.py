@@ -1,6 +1,8 @@
 from telegram.ext import CommandHandler
 from telegram import ParseMode
 
+from Localization.Strings import Strings
+
 
 class OnCommandHandler(CommandHandler):
     """description of class"""
@@ -14,6 +16,7 @@ class OnCommandHandler(CommandHandler):
         message = update.message
         chat_id = message.chat_id
         user_id = message.from_user.id
+        localizer = self._localizer.get_localizer(update)
 
         user = message.from_user
         mention = user.username
@@ -27,7 +30,7 @@ class OnCommandHandler(CommandHandler):
         self._db_manager.enable_aliasing(user_id, chat_id)
 
         bot.send_message(chat_id=chat_id,
-                         text="%s, you will be mentioned by your aliases in this chat from now" % mention,
+                         text=localizer(Strings.ALIASING_TURNED_ON) % mention,
                          parse_mode=parse_mode)
 
         self._db_manager.log_command(user_id, chat_id, 'on', 'OK')
