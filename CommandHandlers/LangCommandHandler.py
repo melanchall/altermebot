@@ -9,9 +9,10 @@ from Localization.Strings import Strings
 class LangCommandHandler(CommandHandler):
     """description of class"""
 
-    def __init__(self, db_manager):
+    def __init__(self, db_manager, localizer):
         super().__init__('lang', self.__handle, pass_args=True)
         self._db_manager = db_manager
+        self._localizer = localizer
 
     def __handle(self, bot, update, args):
         message = update.message

@@ -6,9 +6,10 @@ from telegram import ParseMode
 class ListCommandHandler(CommandHandler):
     """description of class"""
 
-    def __init__(self, db_manager):
+    def __init__(self, db_manager, localizer):
         super().__init__('list', self.__handle)
         self._db_manager = db_manager
+        self._localizer = localizer
 
     def __handle(self, bot, update):
         message = update.message

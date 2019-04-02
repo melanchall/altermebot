@@ -75,14 +75,14 @@ class Bot(object):
 
     def __setup_command_handlers(self):
         handlers = [
-            AliasCommandHandler(self._db_manager),
-            ListCommandHandler(self._db_manager),
+            AliasCommandHandler(self._db_manager, self._localizer),
+            ListCommandHandler(self._db_manager, self._localizer),
             HelpCommandHandler(self._localizer),
-            RemoveCommandHandler(self._db_manager),
-            ClearCommandHandler(self._db_manager),
-            OnCommandHandler(self._db_manager),
-            OffCommandHandler(self._db_manager),
-            LangCommandHandler(self._db_manager)
+            RemoveCommandHandler(self._db_manager, self._localizer),
+            ClearCommandHandler(self._db_manager, self._localizer),
+            OnCommandHandler(self._db_manager, self._localizer),
+            OffCommandHandler(self._db_manager, self._localizer),
+            LangCommandHandler(self._db_manager, self._localizer)
         ]
 
         for handler in handlers:
