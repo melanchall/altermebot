@@ -22,6 +22,9 @@ Disable mentioning you by your aliases in the current chat
 #### `/on`
 Enable mentioning you by your aliases in the current chat
 
+#### `/lang <language>`
+Switch bot's messages language
+
 #### `/help`
 Show the help message
 
