@@ -9,12 +9,9 @@ from Localization.Strings import Strings
 
 class LanguageCallbackQueryHandler(CallbackQueryHandler):
     def __init__(self, db_manager, localizer):
-        super().__init__(self.__handle)
+        super().__init__(self.__handle, pattern=r'^(en|ru)$')
         self._db_manager = db_manager
         self._localizer = localizer
-
-    def check_update(self, update):
-        return True
 
     def __handle(self, bot, update):
         logging.info('lang handler entered')
