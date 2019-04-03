@@ -35,7 +35,7 @@ class LangCommandHandler(CommandHandler):
             InlineKeyboardButton("English", callback_data='en'),
             InlineKeyboardButton("Русский", callback_data='ru')
         ]
-        reply_markup = InlineKeyboardMarkup(button_list)
+        reply_markup = InlineKeyboardMarkup([button_list])
 
         bot.send_message(chat_id=chat_id,
                          text='%s, select language:' % mention,
