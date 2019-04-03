@@ -16,6 +16,8 @@ from CommandHandlers.LangCommandHandler import LangCommandHandler
 
 from MessageHandlers.AliasMessageHandler import AliasMessageHandler
 
+from CallbackQueryHandlers.LanguageCallbackQueryHandler import LanguageCallbackQueryHandler
+
 from DbManager import DbManager
 from HealthChecker import HealthChecker
 from Localization.Localizer import Localizer
@@ -42,6 +44,7 @@ class Bot(object):
 
         self.__setup_command_handlers()
         self.__setup_message_handlers()
+        self.__setup_callback_query_handlers()
         self.__setup_error_handler()
 
     def start(self):
@@ -91,6 +94,14 @@ class Bot(object):
     def __setup_message_handlers(self):
         handlers = [
             AliasMessageHandler(self._db_manager)
+        ]
+
+        for handler in handlers:
+            self._dispatcher.add_handler(handler)
+
+    def __setup_callback_query_handlers(self):
+        handlers = [
+            LanguageCallbackQueryHandler(self._db_manager, self._localizer)
         ]
 
         for handler in handlers:

@@ -1,5 +1,5 @@
 from telegram.ext import CommandHandler
-from telegram import ParseMode
+from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 
 from BotUtils import escape_markdown
 from Localization.Languages import Languages
@@ -28,6 +28,21 @@ class LangCommandHandler(CommandHandler):
             parse_mode = ParseMode.MARKDOWN
         else:
             mention = "@%s" % mention
+
+        #
+
+        button_list = [
+            InlineKeyboardButton("English", callback_data='en'),
+            InlineKeyboardButton("Русский", callback_data='ru')
+        ]
+        reply_markup = InlineKeyboardMarkup(button_list)
+
+        bot.send_message(chat_id=chat_id,
+                         text='%s, select language:' % mention,
+                         parse_mode=parse_mode,
+                         reply_markup=reply_markup)
+
+        return
 
         # Check that language is specified
 
