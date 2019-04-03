@@ -1,3 +1,5 @@
+import logging
+
 from telegram.ext import CallbackQueryHandler
 from telegram import ParseMode
 
@@ -12,6 +14,8 @@ class LanguageCallbackQueryHandler(CallbackQueryHandler):
         self._localizer = localizer
 
     def __handle(self, bot, update):
+        logging.info('lang handler entered')
+
         message = update.message
         chat_id = message.chat_id
         user_id = message.from_user.id
@@ -26,8 +30,11 @@ class LanguageCallbackQueryHandler(CallbackQueryHandler):
         else:
             mention = "@%s" % mention
 
+        logging.info(mention)
+
         callback_query = update.callback_query
         language = callback_query.data
+        logging.info(language)
 
         self._db_manager.switch_language(user_id, chat_id, language)
         bot.send_message(chat_id=chat_id,
