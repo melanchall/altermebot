@@ -43,7 +43,7 @@ class Bot(object):
         self._health_check_interval = int(os.environ.get('HEALTH_CHECK_INTERVAL'))
 
         self.__setup_command_handlers()
-        self.__setup_callback_query_handlers()
+        # self.__setup_callback_query_handlers()
         self.__setup_message_handlers()
         self.__setup_error_handler()
 
@@ -84,8 +84,8 @@ class Bot(object):
             RemoveCommandHandler(self._db_manager, self._localizer),
             ClearCommandHandler(self._db_manager, self._localizer),
             OnCommandHandler(self._db_manager, self._localizer),
-            OffCommandHandler(self._db_manager, self._localizer),
-            LangCommandHandler(self._db_manager, self._localizer)
+            OffCommandHandler(self._db_manager, self._localizer)
+            # LangCommandHandler(self._db_manager, self._localizer)
         ]
 
         for handler in handlers:
