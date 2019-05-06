@@ -4,6 +4,7 @@ import threading
 
 from telegram.ext import Updater, MessageQueue
 from telegram.error import (TelegramError, ChatMigrated)
+from telegram.utils.request import Request
 
 from CommandHandlers.AliasCommandHandler import AliasCommandHandler
 from CommandHandlers.ListCommandHandler import ListCommandHandler
@@ -31,7 +32,8 @@ class Bot(object):
     def __init__(self):
         token = os.environ.get('ALTER_ME_TOKEN')
         message_queue = MessageQueue(all_burst_limit=29, all_time_limit_ms=1017)
-        bot = MessageQueueBot(token, message_queue=message_queue)
+        request = Request(con_pool_size=8)
+        bot = MessageQueueBot(token, request=request, message_queue=message_queue)
 
         self._updater = Updater(bot=bot)
         self._dispatcher = self._updater.dispatcher
