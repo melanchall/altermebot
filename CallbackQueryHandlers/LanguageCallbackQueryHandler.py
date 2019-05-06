@@ -16,9 +16,7 @@ class LanguageCallbackQueryHandler(CallbackQueryHandler):
     def __handle(self, bot, update):
         logging.info('lang handler entered')
 
-        message = update.message
-        logging.info('update: ' + update)
-        logging.info('message: ' + message)
+        message = update.effective_message
         chat_id = message.chat_id
         user_id = message.from_user.id
         localizer = self._localizer.get_localizer(update)
