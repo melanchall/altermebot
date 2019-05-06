@@ -84,7 +84,7 @@ class Bot(object):
             RemoveCommandHandler(self._db_manager, self._localizer),
             ClearCommandHandler(self._db_manager, self._localizer),
             OnCommandHandler(self._db_manager, self._localizer),
-            OffCommandHandler(self._db_manager, self._localizer)
+            OffCommandHandler(self._db_manager, self._localizer),
             LangCommandHandler(self._db_manager, self._localizer)
         ]
 
