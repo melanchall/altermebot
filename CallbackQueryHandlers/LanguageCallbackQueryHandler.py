@@ -17,11 +17,12 @@ class LanguageCallbackQueryHandler(CallbackQueryHandler):
         logging.info('lang handler entered')
 
         message = update.effective_message
-        chat_id = message.chat_id
-        user_id = message.from_user.id
+        chat = update.effective_chat
+        chat_id = chat.id
+        user = update.effective_user
+        user_id = user.id
         localizer = self._localizer.get_localizer(update)
 
-        user = message.from_user
         mention = user.username
         parse_mode = None
         if not mention:
