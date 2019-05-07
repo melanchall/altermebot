@@ -4,29 +4,16 @@
 
 ## Commands
 
-#### `/alias <alias>`
-Add the specified alias so you can be called with it in the current chat
-
-#### `/list`
-List all your aliases for the current chat
-
-#### `/remove <alias>`
-Remove the specified alias so you cannot be called with it in the current chat
-
-#### `/clear`
-Remove all your aliases in the current chat
-
-#### `/off`
-Disable mentioning you by your aliases in the current chat
-
-#### `/on`
-Enable mentioning you by your aliases in the current chat
-
-#### `/lang <language>`
-Switch bot's messages language
-
-#### `/help`
-Show the help message
+Command|Description
+---|---
+`/alias <alias>`|Add the specified alias so you can be called with it in the current chat. Min length of alias is 2 and max length is 32. You can add up to 10 aliases.
+`/list`|List all your aliases for the current chat.
+`/remove <alias>`|Remove the specified alias so you cannot be called with it in the current chat.
+`/clear`|Remove all your aliases in the current chat.
+`/off`|Disable mentioning you by your aliases in the current chat. This command acts as "Don't disturb" sign on your room in a hotel. None of your aliases removed, bot just stops calling you until you resume mentioning with **/on** command.
+`/on`|Enable mentioning you by your aliases in the current chat.
+`/lang`|Switch bot's messages language. Buttons with the available languages will be displayed. As you press a button, all messages from the bot will be in selected language from this moment. At now two languages available: English and Russian.
+`/help`|Show the help message describing available commands.
 
 ## How the bot works
 
