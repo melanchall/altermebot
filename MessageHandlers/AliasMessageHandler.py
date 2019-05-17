@@ -27,7 +27,7 @@ class AliasMessageHandler(MessageHandler):
         
         chat = update.effective_chat
 
-        foreign_user_ids = set(filter(lambda u: (u != from_user_id) and (chat.get_member(u).status not 'left'), user_ids))
+        foreign_user_ids = set(filter(lambda u: (u != from_user_id), user_ids))
 
         if not any(foreign_user_ids):
             logging.info("message: exited due to aliases are owned by message sender")
